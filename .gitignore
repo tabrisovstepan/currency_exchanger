@@ -4,6 +4,7 @@ target/
 !**/src/test/**/target/
 
 .idea/
+.smarttomcat/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
