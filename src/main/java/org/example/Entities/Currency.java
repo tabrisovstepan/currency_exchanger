@@ -1,13 +1,11 @@
 package org.example.Entities;
 
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.Getter;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Currency {
     private Long id;
 
