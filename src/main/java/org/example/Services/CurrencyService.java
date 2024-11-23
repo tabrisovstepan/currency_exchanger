@@ -1,15 +1,16 @@
 package org.example.Services;
 
+import org.example.DAO.CurrencyDAO;
 import org.example.Entities.Currency;
 
 import java.util.List;
 
 public class CurrencyService {
 
-    //private CurrencyDAO currencyDAO;
+    private final CurrencyDAO currencyDAO;
 
-    public CurrencyService() {
-        // init dao
+    public CurrencyService(CurrencyDAO currencyDAO) {
+        this.currencyDAO = currencyDAO;
     }
 
     public List<Currency> getListOfCurrencies() {

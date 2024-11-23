@@ -1,17 +1,23 @@
 package org.example.Services;
 
+import org.example.DAO.CurrencyDAO;
+import org.example.DAO.ExchangeRateDAO;
 import org.example.DTO.ExchangeRateDTO;
 import org.example.Entities.Currency;
+import org.example.Mappers.ExchangeRateMapper;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public class ExchangeRateService {
-    //private ExchangeRateDAO exchangeRateDAO;
-    //private CurrencyDAO currencyDAO;
+    private final ExchangeRateDAO exchangeRateDAO;
+    private final CurrencyDAO currencyDAO;
+    private final ExchangeRateMapper mapper;
 
-    public ExchangeRateService() {
-
+    public ExchangeRateService(CurrencyDAO currencyDAO, ExchangeRateDAO exchangeRateDAO) {
+        this.currencyDAO = currencyDAO;
+        this.exchangeRateDAO = exchangeRateDAO;
+        mapper = new ExchangeRateMapper(currencyDAO);
     }
 
     public List<ExchangeRateDTO> getListOfExchangeRates() {
