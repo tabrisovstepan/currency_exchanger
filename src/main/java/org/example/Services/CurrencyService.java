@@ -2,6 +2,7 @@ package org.example.Services;
 
 import org.example.DAO.CurrencyDAO;
 import org.example.Entities.Currency;
+import org.sqlite.SQLiteException;
 
 import java.util.List;
 
@@ -14,17 +15,22 @@ public class CurrencyService {
     }
 
     public List<Currency> getListOfCurrencies() {
-        return List.of();
+        return currencyDAO.findAll();
     }
 
-    public void addCurrency(String code, String fullName, String sign) {
-        // dao.save(new Currency(code, fullName, sign))
+    public void addCurrency(String code, String fullName, String sign) throws SQLiteException {
+        currencyDAO.save(new Currency(code, fullName, sign));
     }
 
     public Currency getCurrency(String code) {
         //Optional<Currency> currency = dao.findByCode(code);
         // if (!currency.isPresent()) throw new CustomException();
         // return currency.get();
-        return new Currency("", "", "");
+        return currencyDAO.findByCode(code);
+    }
+
+    public Currency postCurrency(String code, String fullName, String sign) throws SQLiteException {
+        currencyDAO.save(new Currency(code, fullName, sign));
+        return currencyDAO.findByCode(code);
     }
 }

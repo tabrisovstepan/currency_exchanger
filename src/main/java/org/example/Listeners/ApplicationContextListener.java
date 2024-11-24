@@ -12,15 +12,28 @@ import org.example.DAO.ExchangeRateDAO;
 import org.example.Services.CurrencyService;
 import org.example.Services.ExchangeRateService;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+
 @WebListener
 public class ApplicationContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
 
+        URI uri;
+        try {
+            uri = getClass().getClassLoader().getResource("currency_exchanger.db").toURI();
+        } catch (URISyntaxException e) {
+
+            throw new RuntimeException(e);
+        }
+        String db = Paths.get(uri).toString();
+
         HikariConfig config = new HikariConfig();
         config.setDriverClassName("org.sqlite.JDBC");
-        config.setJdbcUrl("jdbc:sqlite:resources/currency_exchanger.db");
+        config.setJdbcUrl("jdbc:sqlite:" + db);
         HikariDataSource dataSource = new HikariDataSource(config);
 
         CurrencyDAO currencyDAO = new CurrencyDAO(dataSource);
@@ -31,6 +44,6 @@ public class ApplicationContextListener implements ServletContextListener {
         ObjectMapper jsonMapper = new ObjectMapper();
         context.setAttribute("currency_service", currencyService);
         context.setAttribute("exchange_rate_service", exchangeRateService);
-        context.setAttribute("json_napper", jsonMapper);
+        context.setAttribute("json_mapper", jsonMapper);
     }
 }
