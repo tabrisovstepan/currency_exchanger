@@ -17,4 +17,7 @@ public class Currency {
 
     @NonNull
     private String sign;
+
+    //for DTO mapper, check how to check error
+    private Currency() {}
 }

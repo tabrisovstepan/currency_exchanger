@@ -32,7 +32,7 @@ public class ExchangeRateMapper {
     private class CurrencyConverter extends AbstractConverter<Long, Currency> {
         @Override
         protected Currency convert(Long id) {
-            return currencyDAO.findById(id);
+            return currencyDAO.findById(id).orElseGet(() -> new Currency("", "",""));
         }
     }
 }

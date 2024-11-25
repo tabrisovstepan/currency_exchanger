@@ -19,12 +19,24 @@ public class CurrencyDAO {
         this.dataSource = dataSource;
     }
 
-    public Currency findById(Long id) {
-        return null;
+    public Optional<Currency> findById(Long id) {
+        String query = "select * from currencies where id = ?;";
+        Currency currency = null;
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement prepStmt = conn.prepareStatement(query);
+            prepStmt.setLong(1, id);
+            ResultSet rs = prepStmt.executeQuery();
+            while (rs.next()) {
+                currency = fromRS(rs);
+            }
+            return Optional.ofNullable(currency);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public Optional<Currency> findByCode(String code) {
-        String query = "SELECT * from currencies WHERE code = ?";
+        String query = "SELECT * from currencies WHERE code = ?;";
         Currency currency = null;
         try (Connection conn = dataSource.getConnection()) {
             PreparedStatement prepStmt = conn.prepareStatement(query);

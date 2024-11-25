@@ -19,4 +19,6 @@ public class ExchangeRateDTO {
 
     @NonNull
     private BigDecimal rate;
+    //for DTO mapper, check how to check error
+    private ExchangeRateDTO() {}
 }
