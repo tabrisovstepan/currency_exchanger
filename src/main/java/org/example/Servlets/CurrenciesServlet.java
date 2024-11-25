@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.Entities.Currency;
+import org.example.Exceptions.RecordNotFoundException;
 import org.example.Services.CurrencyService;
 import org.sqlite.SQLiteException;
 
@@ -53,15 +54,13 @@ public class CurrenciesServlet extends HttpServlet {
         // may be move logic into service
         try {
             currencyService.addCurrency(code, fullName, sign);
-        } catch (SQLiteException ex) {
+            Currency currency = currencyService.getCurrency(code);
+            resp.addHeader("Content-Type", "application/json;charset=UTF-8");
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+            resp.getWriter().write(mapper.writeValueAsString(currency));
+        } catch (SQLiteException | RecordNotFoundException ex) {
             resp.sendError(HttpServletResponse.SC_CONFLICT, ex.getMessage());
-            return;
         }
-        Currency currency = currencyService.getCurrency(code);
-
-        resp.addHeader("Content-Type", "application/json;charset=UTF-8");
-        resp.setStatus(HttpServletResponse.SC_CREATED);
-        resp.getWriter().write(mapper.writeValueAsString(currency));
     }
 
     private boolean isValidParameters(String code, String fullName, String sign) {

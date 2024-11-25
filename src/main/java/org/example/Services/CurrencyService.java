@@ -2,9 +2,11 @@ package org.example.Services;
 
 import org.example.DAO.CurrencyDAO;
 import org.example.Entities.Currency;
+import org.example.Exceptions.RecordNotFoundException;
 import org.sqlite.SQLiteException;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CurrencyService {
 
@@ -22,15 +24,16 @@ public class CurrencyService {
         currencyDAO.save(new Currency(code, fullName, sign));
     }
 
-    public Currency getCurrency(String code) {
-        //Optional<Currency> currency = dao.findByCode(code);
-        // if (!currency.isPresent()) throw new CustomException();
-        // return currency.get();
-        return currencyDAO.findByCode(code);
+    public Currency getCurrency(String code) throws RecordNotFoundException {
+        Optional<Currency> currency = currencyDAO.findByCode(code);
+        if (currency.isEmpty()) {
+            throw new RecordNotFoundException("Currency with code " + code + " not found.");
+        }
+        return currency.get();
     }
 
-    public Currency postCurrency(String code, String fullName, String sign) throws SQLiteException {
-        currencyDAO.save(new Currency(code, fullName, sign));
-        return currencyDAO.findByCode(code);
+    public Currency postCurrency(String code, String fullName, String sign) throws SQLiteException, RecordNotFoundException {
+        addCurrency(code, fullName, sign);
+        return getCurrency(code);
     }
 }

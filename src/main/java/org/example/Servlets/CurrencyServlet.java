@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.Entities.Currency;
+import org.example.Exceptions.RecordNotFoundException;
 import org.example.Services.CurrencyService;
 
 import java.io.IOException;
@@ -35,8 +36,13 @@ public class CurrencyServlet extends HttpServlet {
 
         String code = req.getPathInfo().replaceFirst("/", "").toUpperCase();
 
-        Currency currency = currencyService.getCurrency(code);
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().write(mapper.writeValueAsString(currency));
+        try {
+            Currency currency = currencyService.getCurrency(code);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.addHeader("Content-Type", "application/json;charset=UTF-8");
+            resp.getWriter().write(mapper.writeValueAsString(currency));
+        } catch (RecordNotFoundException ex) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+        }
     }
 }

@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CurrencyDAO {
     private final DataSource dataSource;
@@ -21,8 +22,8 @@ public class CurrencyDAO {
     public Currency findById(Long id) {
         return null;
     }
-    // return optional
-    public Currency findByCode(String code) {
+
+    public Optional<Currency> findByCode(String code) {
         String query = "SELECT * from currencies WHERE code = ?";
         Currency currency = null;
         try (Connection conn = dataSource.getConnection()) {
@@ -32,7 +33,7 @@ public class CurrencyDAO {
             while (rs.next()) {
                 currency = fromRS(rs);
             }
-            return currency;
+            return Optional.ofNullable(currency);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
