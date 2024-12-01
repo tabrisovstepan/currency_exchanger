@@ -8,6 +8,9 @@ import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ExchangeRateMapper {
 
     private final CurrencyDAO currencyDAO;
@@ -27,6 +30,12 @@ public class ExchangeRateMapper {
 
     public ExchangeRateDTO mapToDTO(ExchangeRate exchangeRate) {
         return mapper.map(exchangeRate, ExchangeRateDTO.class);
+    }
+
+    public List<ExchangeRateDTO> mapToDTO(List<ExchangeRate> exchangeRates) {
+        return exchangeRates.stream()
+                .map(exchangeRate -> mapper.map(exchangeRate, ExchangeRateDTO.class))
+                .collect(Collectors.toList());
     }
 
     private class CurrencyConverter extends AbstractConverter<Long, Currency> {

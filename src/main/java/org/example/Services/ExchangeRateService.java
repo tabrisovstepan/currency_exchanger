@@ -26,10 +26,8 @@ public class ExchangeRateService {
     }
 
     public List<ExchangeRateDTO> getListOfExchangeRates() {
-        // List<ExchangeRate> exchangeRates = exchangeRateDAO.findAll();
-        // map entity -> dto
-        // return list
-        return List.of();
+        List<ExchangeRate> exchangeRates = exchangeRateDAO.findAll();
+        return mapper.mapToDTO(exchangeRates);
     }
 
     public ExchangeRateDTO getExchangeRate(String baseCurrencyCode, String targetCurrencyCode) throws RecordNotFoundException {

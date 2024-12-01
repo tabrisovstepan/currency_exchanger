@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ExchangeRateDAO {
@@ -17,6 +19,22 @@ public class ExchangeRateDAO {
 
     public ExchangeRateDAO(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public List<ExchangeRate> findAll() {
+        String query = "select * from exchange_rates;";
+        List<ExchangeRate> exchangeRates = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement prepStmt = conn.prepareStatement(query);
+            ResultSet rs = prepStmt.executeQuery();
+            while (rs.next()) {
+                exchangeRates.add(fromRS(rs));
+            }
+            return exchangeRates;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     // fix multiply add. may be use unique constraint

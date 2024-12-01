@@ -16,6 +16,7 @@ import org.example.Services.ExchangeRateService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 @MultipartConfig
 @WebServlet(name = "exchangeRatesServlet", value = "/exchangeRates")
@@ -33,7 +34,10 @@ public class ExchangeRatesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        List<ExchangeRateDTO> exchangeRates = exchangeRateService.getListOfExchangeRates();
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.addHeader("Content-Type", "application/json;charset=UTF-8");
+        resp.getWriter().write(mapper.writeValueAsString(exchangeRates));
     }
 
     //fix multiply add. check dao
