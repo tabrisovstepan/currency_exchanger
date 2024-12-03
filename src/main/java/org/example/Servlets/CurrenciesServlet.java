@@ -35,7 +35,6 @@ public class CurrenciesServlet extends HttpServlet {
         // handle database disconnection
         List<Currency> currencies = currencyService.getListOfCurrencies();
         resp.setStatus(HttpServletResponse.SC_OK);
-        resp.addHeader("Content-Type", "application/json;charset=UTF-8");
         resp.getWriter().write(mapper.writeValueAsString(currencies));
     }
 
@@ -55,7 +54,6 @@ public class CurrenciesServlet extends HttpServlet {
         try {
             currencyService.addCurrency(code, fullName, sign);
             Currency currency = currencyService.getCurrency(code);
-            resp.addHeader("Content-Type", "application/json;charset=UTF-8");
             resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.getWriter().write(mapper.writeValueAsString(currency));
         } catch (SQLiteException | RecordNotFoundException ex) {

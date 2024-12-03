@@ -46,7 +46,6 @@ public class ExchangeServlet extends HttpServlet {
         try {
             ExchangeDTO exchange = exchangeRateService.calculateExchange(fromCurrencyCode, toCurrencyCode, amount);
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.addHeader("Content-Type", "application/json;charset=UTF-8");
             resp.getWriter().write(mapper.writeValueAsString(exchange));
         } catch (RecordNotFoundException ex) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, ex.getMessage());

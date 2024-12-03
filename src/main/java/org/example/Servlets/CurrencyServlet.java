@@ -39,7 +39,6 @@ public class CurrencyServlet extends HttpServlet {
         try {
             Currency currency = currencyService.getCurrency(code);
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.addHeader("Content-Type", "application/json;charset=UTF-8");
             resp.getWriter().write(mapper.writeValueAsString(currency));
         } catch (RecordNotFoundException ex) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());

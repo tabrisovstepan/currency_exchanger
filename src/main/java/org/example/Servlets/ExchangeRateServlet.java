@@ -60,7 +60,6 @@ public class ExchangeRateServlet extends HttpServlet {
         try {
             ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(baseCurrencyCode, targetCurrencyCode);
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.addHeader("Content-Type", "application/json;charset=UTF-8");
             resp.getWriter().write(mapper.writeValueAsString(exchangeRate));
         } catch (RecordNotFoundException ex) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, ex.getMessage());
@@ -99,7 +98,6 @@ public class ExchangeRateServlet extends HttpServlet {
             exchangeRateService.updateExchangeRate(baseCurrencyCode, targetCurrencyCode, rate);
             ExchangeRateDTO exchangeRate = exchangeRateService.getExchangeRate(baseCurrencyCode, targetCurrencyCode);
             resp.setStatus(HttpServletResponse.SC_OK);
-            resp.addHeader("Content-Type", "application/json;charset=UTF-8");
             resp.getWriter().write(mapper.writeValueAsString(exchangeRate));
         } catch (RecordNotFoundException ex) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, ex.getMessage());
