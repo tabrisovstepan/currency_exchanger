@@ -58,7 +58,22 @@ public class ExchangeRateDAO {
     }
 
     public Optional<ExchangeRate> findByCodes(String baseCurrencyCode, String targetCurrencyCode) {
-        return Optional.empty();
+        String query = "select * from exchange_rates where " +
+                "base_currency_id = (select id from currencies where code = ?) and " +
+                "target_currency_id = (select id from currencies where code = ?)";
+        ExchangeRate exchangeRate = null;
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement prepStmt = conn.prepareStatement(query);
+            prepStmt.setString(1, baseCurrencyCode);
+            prepStmt.setString(2, targetCurrencyCode);
+            ResultSet rs = prepStmt.executeQuery();
+            while (rs.next()) {
+                exchangeRate = fromRS(rs);
+            }
+            return Optional.ofNullable(exchangeRate);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public Optional<ExchangeRate> findById(Long baseCurrencyId, Long targetCurrencyId) {
@@ -74,6 +89,18 @@ public class ExchangeRateDAO {
                 exchangeRate = fromRS(rs);
             }
             return Optional.ofNullable(exchangeRate);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public void update(ExchangeRate exchangeRate) {
+        String query = "update exchange_rates set rate = ? where id = ?;";
+        try (Connection conn = dataSource.getConnection()) {
+            PreparedStatement prepStmt = conn.prepareStatement(query);
+            prepStmt.setBigDecimal(1, exchangeRate.getRate());
+            prepStmt.setLong(2, exchangeRate.getId());
+            prepStmt.execute();
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }

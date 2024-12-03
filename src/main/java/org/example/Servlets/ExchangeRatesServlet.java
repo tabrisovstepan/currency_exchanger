@@ -71,7 +71,7 @@ public class ExchangeRatesServlet extends HttpServlet {
     // to do better (check lengths)
     private boolean isValidParameters(String baseCode, String targetCode, String rate) {
         return baseCode != null && targetCode != null && rate != null &&
-                !baseCode.isEmpty() && !targetCode.isEmpty()  && isNumber(rate);
+                !baseCode.isEmpty() && !targetCode.isEmpty() && isNumber(rate);
     }
 
     private boolean isNumber(String rate) {
@@ -83,6 +83,4 @@ public class ExchangeRatesServlet extends HttpServlet {
         }
         return true;
     }
-
-
 }

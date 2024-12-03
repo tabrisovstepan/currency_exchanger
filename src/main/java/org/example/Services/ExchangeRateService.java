@@ -11,6 +11,7 @@ import org.example.Mappers.ExchangeRateMapper;
 import org.sqlite.SQLiteException;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,15 +32,7 @@ public class ExchangeRateService {
     }
 
     public ExchangeRateDTO getExchangeRate(String baseCurrencyCode, String targetCurrencyCode) throws RecordNotFoundException {
-        // may be move queries in exchange rate dao
-        Optional<Currency> baseCurrency = currencyDAO.findByCode(baseCurrencyCode);
-        Optional<Currency> targetCurrency = currencyDAO.findByCode(targetCurrencyCode);
-
-        if (baseCurrency.isEmpty() || targetCurrency.isEmpty()) {
-            throw new RecordNotFoundException("Currency not found");
-        }
-
-        Optional<ExchangeRate> exchangeRate = exchangeRateDAO.findById(baseCurrency.get().getId(), targetCurrency.get().getId());
+        Optional<ExchangeRate> exchangeRate = exchangeRateDAO.findByCodes(baseCurrencyCode, targetCurrencyCode);
 
         if (exchangeRate.isEmpty()) {
             throw new RecordNotFoundException("Exchange rate not found");
@@ -57,5 +50,16 @@ public class ExchangeRateService {
 
         ExchangeRate exchangeRate = new ExchangeRate(0L, baseCurrency.get().getId(), targetCurrency.get().getId(), rate);
         exchangeRateDAO.save(exchangeRate);
+    }
+
+    public void updateExchangeRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal rate) throws RecordNotFoundException {
+        Optional<ExchangeRate> exchangeRate = exchangeRateDAO.findByCodes(baseCurrencyCode, targetCurrencyCode);
+
+        if (exchangeRate.isEmpty()) {
+            throw new RecordNotFoundException("Exchange rate not found");
+        }
+
+        exchangeRate.get().setRate(rate);
+        exchangeRateDAO.update(exchangeRate.get());
     }
 }
